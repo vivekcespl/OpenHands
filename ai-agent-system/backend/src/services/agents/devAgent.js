@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { callClaudeAPI } = require('../../utils/claudeAPI');
 
 /**
  * Dev Agent - Specializes in technical development and code generation
@@ -20,7 +21,7 @@ Format your code responses with proper syntax highlighting using markdown code b
     // Construct the user message with context
     const userMessage = constructUserMessage(prompt, context);
     
-    // Call Claude API via OpenHands
+    // Call Claude API
     const response = await callClaudeAPI(systemPrompt, userMessage, options);
     
     return {
@@ -76,66 +77,3 @@ function summarizeResponse(response) {
   return content;
 }
 
-/**
- * Call the Claude API via OpenHands
- */
-async function callClaudeAPI(systemPrompt, userMessage, options = {}) {
-  try {
-    // This is a placeholder for the actual Claude API integration
-    // In a real implementation, this would make an API call to Claude via OpenHands
-    
-    // Simulate API response for now
-    return {
-      content: `# Development Solution
-
-Here's a sample smart contract implementation:
-
-\`\`\`solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
-
-contract TokenDistribution {
-    address public owner;
-    mapping(address => uint256) public balances;
-    
-    event Distribution(address indexed recipient, uint256 amount);
-    
-    constructor() {
-        owner = msg.sender;
-    }
-    
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only owner can call this function");
-        _;
-    }
-    
-    function distribute(address[] calldata recipients, uint256[] calldata amounts) external onlyOwner {
-        require(recipients.length == amounts.length, "Arrays must be same length");
-        
-        for (uint i = 0; i < recipients.length; i++) {
-            balances[recipients[i]] += amounts[i];
-            emit Distribution(recipients[i], amounts[i]);
-        }
-    }
-}
-\`\`\`
-
-## Implementation Notes
-- This contract allows for batch distribution of tokens
-- Events are emitted for each distribution for transparency
-- Only the owner can perform distributions
-
-## Next Steps
-1. Add token transfer functionality
-2. Implement access control for different admin roles
-3. Add unit tests for all functions`,
-      usage: {
-        prompt_tokens: 600,
-        completion_tokens: 400
-      }
-    };
-  } catch (error) {
-    console.error('Error calling Claude API:', error);
-    throw new Error(`Claude API error: ${error.message}`);
-  }
-}

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { callClaudeAPI } = require('../../utils/claudeAPI');
 
 /**
  * Tokenomics Agent - Specializes in token economics and distribution models
@@ -21,7 +22,7 @@ Format your responses in Markdown with proper headings, bullet points, and inclu
     // Construct the user message with context
     const userMessage = constructUserMessage(prompt, context);
     
-    // Call Claude API via OpenHands
+    // Call Claude API
     const response = await callClaudeAPI(systemPrompt, userMessage, options);
     
     return {
@@ -77,57 +78,3 @@ function summarizeResponse(response) {
   return content;
 }
 
-/**
- * Call the Claude API via OpenHands
- */
-async function callClaudeAPI(systemPrompt, userMessage, options = {}) {
-  try {
-    // This is a placeholder for the actual Claude API integration
-    // In a real implementation, this would make an API call to Claude via OpenHands
-    
-    // Simulate API response for now
-    return {
-      content: `# Tokenomics Model
-
-## Token Distribution
-
-| Allocation | Percentage | Tokens | Vesting |
-|------------|------------|--------|---------|
-| Team | 15% | 15,000,000 | 2-year linear vesting with 6-month cliff |
-| Investors | 20% | 20,000,000 | 18-month linear vesting with 3-month cliff |
-| Community | 40% | 40,000,000 | No vesting, allocated to rewards and ecosystem |
-| Treasury | 15% | 15,000,000 | 3-year linear vesting |
-| Advisors | 5% | 5,000,000 | 1-year linear vesting |
-| Liquidity | 5% | 5,000,000 | Locked for 1 year |
-
-## Emission Schedule
-
-The token will follow a deflationary model with:
-- Initial supply: 100,000,000 tokens
-- Maximum supply: 100,000,000 tokens (no additional minting)
-- Burn mechanism: 2% of transaction fees
-
-## Governance
-
-- Token holders can vote on proposals
-- Voting power is proportional to token holdings
-- Minimum holding period of 30 days required to vote
-- Proposals require 60% majority to pass
-
-## Economic Sustainability
-
-The project will maintain economic sustainability through:
-1. Transaction fees (2% total)
-2. Premium service fees
-3. Partnership revenue sharing
-4. Treasury management`,
-      usage: {
-        prompt_tokens: 550,
-        completion_tokens: 350
-      }
-    };
-  } catch (error) {
-    console.error('Error calling Claude API:', error);
-    throw new Error(`Claude API error: ${error.message}`);
-  }
-}

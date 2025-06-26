@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const agentRoutes = require('./routes/agentRoutes');
+const { validateClaudeAPI } = require('./utils/claudeAPI');
 
 const app = express();
 const PORT = process.env.PORT || 12001;
@@ -22,6 +23,32 @@ app.use('/api/agents', agentRoutes);
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Server is running' });
+});
+
+// Claude API health check endpoint
+app.get('/health/claude', async (req, res) => {
+  try {
+    const isValid = await validateClaudeAPI();
+    if (isValid) {
+      res.status(200).json({ 
+        status: 'ok', 
+        message: 'Claude API is working correctly',
+        timestamp: new Date().toISOString()
+      });
+    } else {
+      res.status(503).json({ 
+        status: 'error', 
+        message: 'Claude API validation failed',
+        timestamp: new Date().toISOString()
+      });
+    }
+  } catch (error) {
+    res.status(503).json({ 
+      status: 'error', 
+      message: `Claude API error: ${error.message}`,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Error handling middleware
