@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { callClaudeAPI } = require('../../utils/claudeAPI');
+const { callClaudeAPI } = require('../../utils/openhandsClaudeAPI');
 
 /**
  * Whitepaper Agent - Specializes in creating and analyzing whitepapers

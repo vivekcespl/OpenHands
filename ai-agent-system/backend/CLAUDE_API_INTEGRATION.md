@@ -1,10 +1,10 @@
-# Claude API Integration
+# Claude API Integration via OpenHands
 
-This document describes the Claude API integration implemented for the AI Agent System.
+This document describes the Claude API integration implemented for the AI Agent System using OpenHands' internal LLM interface.
 
 ## Overview
 
-The placeholder Claude API integration has been replaced with a real implementation that connects to Anthropic's Claude API. The integration supports all three specialized agents:
+The Claude API integration has been implemented using OpenHands' LLM class instead of direct Anthropic API calls. This provides better integration with the existing OpenHands environment and configuration. The integration supports all three specialized agents:
 
 - **Whitepaper Agent**: Specializes in creating comprehensive whitepapers
 - **Dev Agent**: Focuses on technical development and code generation  
@@ -14,20 +14,27 @@ The placeholder Claude API integration has been replaced with a real implementat
 
 ### Core Components
 
-1. **Claude API Utility** (`src/utils/claudeAPI.js`)
-   - Centralized Claude API client
-   - Handles authentication, request formatting, and error handling
+1. **OpenHands Claude API Utility** (`src/utils/openhandsClaudeAPI.js`)
+   - Leverages OpenHands' LLM class for Claude API calls
+   - Uses Python scripts to interface with OpenHands LLM
+   - Handles authentication through OpenHands configuration
    - Uses Claude 3.5 Sonnet model by default
    - Configurable parameters (model, max_tokens, temperature)
 
 2. **Agent Integration**
-   - All three agent files updated to use the real Claude API
-   - Removed placeholder implementations
+   - All three agent files updated to use the OpenHands Claude API
    - Maintained existing agent-specific system prompts and context handling
+   - Seamless migration from direct API calls
 
 3. **Health Check Endpoint**
-   - Added `/health/claude` endpoint to validate API connectivity
-   - Useful for monitoring and debugging
+   - Updated `/health/claude` endpoint to validate OpenHands Claude API connectivity
+   - Provides detailed status information and error diagnostics
+
+### Architecture
+
+```
+Node.js Backend → Python Script → OpenHands LLM → LiteLLM → Anthropic Claude API
+```
 
 ### Configuration
 

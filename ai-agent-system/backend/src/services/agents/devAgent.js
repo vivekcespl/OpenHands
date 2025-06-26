@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { callClaudeAPI } = require('../../utils/claudeAPI');
+const { callClaudeAPI } = require('../../utils/openhandsClaudeAPI');
 
 /**
  * Dev Agent - Specializes in technical development and code generation

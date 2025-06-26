@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const agentRoutes = require('./routes/agentRoutes');
-const { validateClaudeAPI } = require('./utils/claudeAPI');
+const { validateOpenHandsClaudeAPI, getOpenHandsClaudeStatus } = require('./utils/openhandsClaudeAPI');
 
 const app = express();
 const PORT = process.env.PORT || 12001;
@@ -25,27 +25,31 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
 
-// Claude API health check endpoint
+// OpenHands Claude API health check endpoint
 app.get('/health/claude', async (req, res) => {
   try {
-    const isValid = await validateClaudeAPI();
-    if (isValid) {
-      res.status(200).json({ 
-        status: 'ok', 
-        message: 'Claude API is working correctly',
+    const status = await getOpenHandsClaudeStatus();
+    if (status.status === 'connected') {
+      res.status(200).json({
+        status: 'ok',
+        message: status.message,
+        model: status.model,
+        lastResponse: status.lastResponse,
         timestamp: new Date().toISOString()
       });
     } else {
-      res.status(503).json({ 
-        status: 'error', 
-        message: 'Claude API validation failed',
+      res.status(503).json({
+        status: 'error',
+        message: status.message,
+        suggestion: status.suggestion,
         timestamp: new Date().toISOString()
       });
     }
   } catch (error) {
-    res.status(503).json({ 
-      status: 'error', 
-      message: `Claude API error: ${error.message}`,
+    res.status(503).json({
+      status: 'error',
+      message: 'Failed to check OpenHands Claude API status',
+      error: error.message,
       timestamp: new Date().toISOString()
     });
   }

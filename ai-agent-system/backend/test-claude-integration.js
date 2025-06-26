@@ -6,23 +6,27 @@
  */
 
 require('dotenv').config();
-const { callClaudeAPI, validateClaudeAPI } = require('./src/utils/claudeAPI');
+const { callClaudeAPI, validateOpenHandsClaudeAPI, getOpenHandsClaudeStatus } = require('./src/utils/openhandsClaudeAPI');
 
 async function testClaudeIntegration() {
   console.log('🧪 Testing Claude API Integration...\n');
 
-  // Test 1: API Key Validation
-  console.log('1. Testing API Key Validation...');
+  // Test 1: OpenHands Claude API Status
+  console.log('1. Testing OpenHands Claude API Status...');
   try {
-    const isValid = await validateClaudeAPI();
-    if (isValid) {
-      console.log('✅ API Key is valid and Claude API is accessible\n');
+    const status = await getOpenHandsClaudeStatus();
+    if (status.status === 'connected') {
+      console.log('✅ OpenHands Claude API is accessible');
+      console.log(`📝 Model: ${status.model}`);
+      console.log(`💬 Last Response: ${status.lastResponse}\n`);
     } else {
-      console.log('❌ API Key validation failed\n');
+      console.log('❌ OpenHands Claude API validation failed');
+      console.log(`📝 Error: ${status.message}`);
+      console.log(`💡 Suggestion: ${status.suggestion}\n`);
       return;
     }
   } catch (error) {
-    console.log(`❌ API Key validation error: ${error.message}\n`);
+    console.log(`❌ OpenHands Claude API validation error: ${error.message}\n`);
     return;
   }
 
@@ -37,7 +41,7 @@ async function testClaudeIntegration() {
     
     console.log('✅ Basic API call successful');
     console.log(`📝 Response: ${response.content.substring(0, 100)}...`);
-    console.log(`📊 Tokens - Input: ${response.usage.prompt_tokens}, Output: ${response.usage.completion_tokens}\n`);
+    console.log(`📊 Tokens - Input: ${response.usage.prompt_tokens || 'N/A'}, Output: ${response.usage.completion_tokens || 'N/A'}\n`);
   } catch (error) {
     console.log(`❌ Basic API call failed: ${error.message}\n`);
     return;
@@ -122,11 +126,12 @@ Format your responses in Markdown with proper headings, bullet points, and inclu
     console.log(`❌ Tokenomics agent test failed: ${error.message}\n`);
   }
 
-  console.log('🎉 Claude API Integration testing completed!');
+  console.log('🎉 OpenHands Claude API Integration testing completed!');
   console.log('\n📋 Summary:');
-  console.log('- Claude API utility is working correctly');
+  console.log('- OpenHands Claude API utility is working correctly');
   console.log('- All agent system prompts are compatible');
   console.log('- Error handling is functioning properly');
+  console.log('- Integration leverages existing OpenHands configuration');
   console.log('\n🚀 The integration is ready for production use!');
 }
 
